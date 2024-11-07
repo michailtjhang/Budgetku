@@ -70,7 +70,7 @@
 
                     <div class="input-group mb-3">
 
-                        <input type="password" class="form-control @error('password') is-invalid @enderror"
+                        <input type="password" id="password" class="form-control @error('password') is-invalid @enderror"
                             name="password" placeholder="Password">
                         <div class="input-group-append">
                             <div class="input-group-text">
@@ -85,14 +85,26 @@
                         @enderror
 
                     </div>
-                    <div class="input-group mb-3">
-                        <input type="password" class="form-control" placeholder="Retype password">
+                    <div class="input-group mb-2">
+                        <input type="password" id="confirm_password" class="form-control" placeholder="Retype password">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
                             </div>
                         </div>
                     </div>
+
+                    <div class="row mb-1">
+                        <div class="col-12">
+                            <div class="icheck-primary">
+                                <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()">
+                                <label for="showPassword">
+                                    Show Password
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-8">
                             <div class="icheck-primary">
@@ -110,7 +122,15 @@
                     </div>
                 </form>
 
-                <a href="{{ route('login') }}" class="text-center">I already have a membership</a>
+                <div class="social-auth-links text-center">
+                    <p>- OR -</p>
+                    <a href="{{ route('auth.socialite.redirect') }}" class="btn btn-block btn-danger">
+                        <i class="fab fa-google-plus mr-2"></i>
+                        Sign up using Google+
+                    </a>
+                </div>
+
+                <a href="{{ route('login') }}" class="text-center">I already have a account</a>
             </div>
             <!-- /.form-box -->
         </div><!-- /.card -->
@@ -123,6 +143,16 @@
     <script src="{{ asset('assets/vendor/adminlte') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/vendor/adminlte') }}/dist/js/adminlte.min.js"></script>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('password');
+            const confirmPasswordField = document.getElementById('confirm_password');
+            const type = passwordField.type === 'password' ? 'text' : 'password';
+            passwordField.type = type;
+            confirmPasswordField.type = type;
+        }
+    </script>
 </body>
 
 </html>

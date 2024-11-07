@@ -53,15 +53,15 @@
 
                     <div class="input-group mb-3">
 
-                        <input type="password" name="password" class="form-control @error('name') is-invalid @enderror"
-                            placeholder="Password">
+                        <input type="password" id="password" name="password"
+                            class="form-control @error('password') is-invalid @enderror" placeholder="Password">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
                             </div>
                         </div>
 
-                        @error('name')
+                        @error('password')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -72,9 +72,9 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="icheck-primary">
-                                <input type="checkbox" id="remember" name="remember">
-                                <label for="remember">
-                                    Remember Me
+                                <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()">
+                                <label for="showPassword">
+                                    Show Password
                                 </label>
                             </div>
                         </div>
@@ -88,11 +88,19 @@
                     </div>
                 </form>
 
+                <div class="social-auth-links text-center mb-3">
+                    <p>- OR -</p>
+                    <a href="{{ route('auth.socialite.redirect') }}" class="btn btn-block btn-danger">
+                        <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
+                    </a>
+                </div>
+
+
                 <p class="mb-1">
                     <a href="#">I forgot my password</a>
                 </p>
                 <p class="mb-0">
-                    <a href="{{ route('register') }}" class="text-center">Register a new membership</a>
+                    <a href="{{ route('register') }}" class="text-center">Register a new account</a>
                 </p>
             </div>
             <!-- /.login-card-body -->
@@ -106,6 +114,17 @@
     <script src="{{ asset('assets/vendor/adminlte') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/vendor/adminlte') }}/dist/js/adminlte.min.js"></script>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        }
+    </script>
 </body>
 
 </html>
