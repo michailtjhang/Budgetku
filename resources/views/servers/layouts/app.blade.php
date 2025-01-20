@@ -4,6 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    @yield('seoMeta')
+
     <title>{{ $page_title ?? 'Dashboard' }} - {{ config('app.name', 'Laravel') }}</title>
 
     <link rel="stylesheet"
@@ -12,9 +15,9 @@
     <!-- ======================== Icon ========================= -->
     <link rel="icon" type="image/x-svg" href="{{ asset('img/icon.svg') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/vendor/adminlte') }}/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/fontawesome-free/css/all.min.css">
 
-    <link rel="stylesheet" href="{{ asset('assets/vendor/adminlte') }}/dist/css/adminlte.min.css?v=3.2.0">
+    <link rel="stylesheet" href="https://adminlte.io/themes/v3/dist/css/adminlte.min.css?v=3.2.0">
     <script nonce="b4280936-d779-40bf-b82a-d0f55cb84e4e">
         (function(w, d) {
             ! function(eK, eL, eM, eN) {
@@ -122,9 +125,9 @@
             reserved.
         </footer>
     </div>
-    <script src="{{ asset('assets/vendor/adminlte/plugins/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
+    <script src="https://adminlte.io/themes/v3/plugins/jquery/jquery.min.js"></script>
+    <script src="https://adminlte.io/themes/v3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://adminlte.io/themes/v3/dist/js/adminlte.min.js?=v3.2.0"></script>
     @yield('js')
 </body>
 

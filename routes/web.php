@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\servers\RoleController;
-use App\Http\Controllers\servers\UserController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\servers\DashboardController;
 
@@ -22,6 +20,7 @@ Route::group(['middleware' => ['auth', 'useradmin']], function () {
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        Route::resource('role', RoleController::class);
-        Route::resource('user', UserController::class);
+        Route::resource('category', App\Http\Controllers\servers\CategoryController::class);
+        Route::resource('role', App\Http\Controllers\servers\RoleController::class);
+        Route::resource('user', App\Http\Controllers\servers\UserController::class);
 });

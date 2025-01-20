@@ -5,7 +5,6 @@
 @endsection
 
 @section('css')
-    <!-- Tambahkan CSS untuk memastikan pagination berada di kanan -->
     <style>
         .pagination-right {
             justify-content: flex-end !important;
@@ -15,8 +14,6 @@
             justify-content: flex-start !important;
         }
     </style>
-
-    <!-- ======================== datatable ========================= -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.7/css/dataTables.dataTables.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css">
 @endsection
@@ -38,9 +35,9 @@
                         <tr>
                             <th>No</th>
                             <th>Nama</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Date Created</th>
+                            <th>Type</th>
+                            <th>Icon</th>
+                            <th>Created At</th>
                             @if (!empty($data['PermissionEdit']) || !empty($data['PermissionDelete']))
                                 <th>Aksi</th>
                             @endif
@@ -50,10 +47,9 @@
                         <tr>
                             <th></th>
                             <th><input type="text" placeholder="Search Nama" class="form-control form-control-sm"></th>
-                            <th><input type="text" placeholder="Search Email" class="form-control form-control-sm"></th>
-                            <th><input type="text" placeholder="Search Role" class="form-control form-control-sm"></th>
-                            <th><input type="text" placeholder="Search Date Created"
-                                    class="form-control form-control-sm"></th>
+                            <th><input type="text" placeholder="Search Type" class="form-control form-control-sm"></th>
+                            <th></th>
+                            <th></th>
                             @if (!empty($data['PermissionEdit']) || !empty($data['PermissionDelete']))
                                 <th></th>
                             @endif
@@ -63,6 +59,10 @@
             </div>
         </div>
     </div>
+
+    <!-- /.modal-content -->
+    @include('servers.category.create-modal')
+    @include('servers.category.edit-modal')
 @endsection
 
 @section('js')
@@ -70,10 +70,10 @@
     <script src="https://cdn.datatables.net/2.1.7/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         $(document).ready(function() {
-            // Inisialisasi DataTable
             var table = $('#dataTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -87,12 +87,22 @@
                         name: 'name'
                     },
                     {
-                        data: 'email',
-                        name: 'email'
+                        data: 'type',
+                        name: 'type',
+                        render: function(data, type, row) {
+                            if (data === 'income') {
+                                return '<span class="badge badge-success">Income</span>';
+                            } else {
+                                return '<span class="badge badge-danger">Expense</span>';
+                            }
+                        }
                     },
                     {
-                        data: 'role.name',
-                        name: 'role.name'
+                        data: 'icon',
+                        name: 'icon',
+                        render: function(data) {
+                            return '<i class="' + data + '"></i>';
+                        }
                     },
                     {
                         data: 'created_at',
@@ -110,20 +120,20 @@
                         },
                     @endif
                 ],
-                dom: @if (!empty($data['PermissionAdd']))
-                    // Jika PermissionAdd tersedia, tombol tambah muncul di kiri
-                    '<"d-flex justify-content-between align-items-center"<"btn-tambah"B><"search-box"f><"length-control"l>>rt<"d-flex justify-content-between align-items-center"<"info-left"i><"pagination-right"p>>'
-                @else
-                    // Jika PermissionAdd tidak tersedia, search berada di posisi tombol
-                    '<"d-flex justify-content-between align-items-center"<"search-box"f><"length-control"l>>rt<"d-flex justify-content-between align-items-center"<"info-left"i><"pagination-right"p>>'
-                @endif ,
+                dom: '<"d-flex justify-content-between align-items-center"<"btn-tambah"B><"search-box"f><"length-control"l>>rt<"d-flex justify-content-between align-items-center"<"info-left"i><"pagination-right"p>>',
                 buttons: [
                     @if (!empty($data['PermissionAdd']))
                         {
                             text: '<i class="fas fa-plus"></i> Tambah',
                             className: 'btn btn-success btn-sm',
-                            action: function() {
-                                window.location.href = "{{ route('user.create') }}";
+                            action: function(e, dt, node, config) {
+                                var modal = document.getElementById('modalCreate');
+                                if (modal) {
+                                    var bootstrapModal = new bootstrap.Modal(modal);
+                                    bootstrapModal.show();
+                                } else {
+                                    console.error('Modal with ID #modalCreate not found.');
+                                }
                             }
                         }
                     @endif
@@ -136,7 +146,6 @@
                 }
             });
 
-            // Tambahkan input search ke setiap kolom footer
             $('#dataTable tfoot th').each(function(i) {
                 var title = $('#dataTable thead th').eq(i).text();
                 if ($(this).find('input').length) {
@@ -148,5 +157,34 @@
                 }
             });
         });
+
+        function confirmDelete(deleteUrl, name) {
+            Swal.fire({
+                title: "Are you sure?",
+                html: `This will delete <strong>${name}</strong>. This action cannot be undone.`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'DELETE',
+                        data: {
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            Swal.fire("Deleted!", response.message, "success");
+                            $('#dataTable').DataTable().ajax.reload();
+                        },
+                        error: function(xhr) {
+                            Swal.fire("Error!", xhr.responseJSON.message, "error");
+                        }
+                    });
+                }
+            });
+        }
     </script>
 @endsection

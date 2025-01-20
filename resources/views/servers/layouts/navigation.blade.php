@@ -40,10 +40,18 @@
                     <li class="nav-header">Management</li>
                 @endif
 
+                <li class="nav-item">
+                    <a href="{{ route('category.index') }}"
+                        class="nav-link @if (Request::segment(1) == 'category') active @endif">
+                        <i class="fas fa-list nav-icon"></i>
+                        <p>Category</p>
+                    </a>
+                </li>
+
                 @if (!empty($PermissionUser))
                     <li class="nav-item">
                         <a href="{{ route('user.index') }}"
-                            class="nav-link @if (Request::segment(2) == 'user') active @endif">
+                            class="nav-link @if (Request::segment(1) == 'user') active @endif">
                             <i class="fas fa-users nav-icon"></i>
                             <p>User</p>
                         </a>
@@ -53,7 +61,7 @@
                 @if (!empty($PermissionRole))
                     <li class="nav-item">
                         <a href="{{ route('role.index') }}"
-                            class="nav-link @if (Request::segment(2) == 'role') active @endif">
+                            class="nav-link @if (Request::segment(1) == 'role') active @endif">
                             <i class="fas fa-users-cog nav-icon"></i>
                             <p>Role</p>
                         </a>

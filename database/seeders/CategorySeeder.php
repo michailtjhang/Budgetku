@@ -2,107 +2,108 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class PermissionSeeder extends Seeder
+class CategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('permission')->insert([
+        DB::table('categories')->insert([
             [
-                'name' => 'Dashboard',
-                'slug' => 'Dashboard',
-                'groupby' => 0,
+                'name' => 'Gaji',
+                'type' => 'income',
+                'icon' => 'fas fa-money-bill-wave',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'name' => 'User',
-                'slug' => 'User',
-                'groupby' => 1,
+                'name' => 'Bonus',
+                'type' => 'income',
+                'icon' => 'fas fa-gift',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'name' => 'Add User',
-                'slug' => 'Add User',
-                'groupby' => 1,
+                'name' => 'Hadiah',
+                'type' => 'income',
+                'icon' => 'fas fa-trophy',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'name' => 'Edit User',
-                'slug' => 'Edit User',
-                'groupby' => 1,
+                'name' => 'Investasi',
+                'type' => 'income',
+                'icon' => 'fas fa-chart-line',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'name' => 'Delete User',
-                'slug' => 'Delete User',
-                'groupby' => 1,
+                'name' => 'Lainnya',
+                'type' => 'income',
+                'icon' => 'fas fa-ellipsis-h',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
+
+            [
+                'name' => 'Makan',
+                'type' => 'expense',
+                'icon' => 'fas fa-utensils',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'name' => 'Role',
-                'slug' => 'Role',
-                'groupby' => 2,
+                'name' => 'Transportasi',
+                'type' => 'expense',
+                'icon' => 'fas fa-car',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'name' => 'Add Role',
-                'slug' => 'Add Role',
-                'groupby' => 2,
+                'name' => 'Pendidikan',
+                'type' => 'expense',
+                'icon' => 'fas fa-book',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'name' => 'Edit Role',
-                'slug' => 'Edit Role',
-                'groupby' => 2,
+                'name' => 'Hiburan',
+                'type' => 'expense',
+                'icon' => 'fas fa-film',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'name' => 'Delete Role',
-                'slug' => 'Delete Role',
-                'groupby' => 2,
+                'name' => 'Kesehatan',
+                'type' => 'expense',
+                'icon' => 'fas fa-heartbeat',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'name' => 'Category',
-                'slug' => 'Category',
-                'groupby' => 3,
+                'name' => 'Belanja',
+                'type' => 'expense',
+                'icon' => 'fas fa-shopping-cart',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'name' => 'Add Category',
-                'slug' => 'Add Category',
-                'groupby' => 3,
+                'name' => 'Tagihan',
+                'type' => 'expense',
+                'icon' => 'fas fa-file-invoice-dollar',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'name' => 'Edit Category',
-                'slug' => 'Edit Category',
-                'groupby' => 3,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ],
-            [
-                'name' => 'Delete Category',
-                'slug' => 'Delete Category',
-                'groupby' => 3,
+                'name' => 'Lainnya',
+                'type' => 'expense',
+                'icon' => 'fas fa-ellipsis-h',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],

@@ -16,15 +16,18 @@ class RoleController extends Controller
      */
     public function index()
     {
+        // Ambil izin berdasarkan role pengguna
         $PermissionRole = PermissionRole::getPermission('Role', Auth::user()->role_id);
         if (empty($PermissionRole)) {
-            abort(404);
+            return back();
         }
 
+        // Ambil izin Add
         $data['PermissionAdd'] = PermissionRole::getPermission('Add Role', Auth::user()->role_id);
         $data['PermissionEdit'] = PermissionRole::getPermission('Edit Role', Auth::user()->role_id);
         $data['PermissionDelete'] = PermissionRole::getPermission('Delete Role', Auth::user()->role_id);
 
+        // Ambil data
         $data['role'] = Role::getRecords();
 
         return view('servers.role.index', [
@@ -38,11 +41,13 @@ class RoleController extends Controller
      */
     public function create()
     {
+        // Ambil izin berdasarkan role pengguna
         $PermissionRole = PermissionRole::getPermission('Add Role', Auth::user()->role_id);
         if (empty($PermissionRole)) {
-            abort(404);
+            return back();
         }
 
+        // Ambil data
         $data = Permission::getRecords();
 
         return view('servers.role.create', [
@@ -56,21 +61,25 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        // Ambil izin berdasarkan role pengguna
         $PermissionRole = PermissionRole::getPermission('Add Role', Auth::user()->role_id);
         if (empty($PermissionRole)) {
-            abort(404);
+            return back();
         }
 
+        // Validasi
         $request->validate([
             'name' => 'required',
         ], [
             'name.required' => 'Role name is required',
         ]);
 
+        // Buat role
         $role = Role::create([
             'name' => $request->name,
         ]);
 
+        // Insert Permission
         PermissionRole::InsertUpdateRecord($request->permission_id, $role->id);
 
         return redirect('role')->with('success', 'Role created successfully');
@@ -89,11 +98,13 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
+        // Ambil izin berdasarkan role pengguna
         $PermissionRole = PermissionRole::getPermission('Edit Role', Auth::user()->role_id);
         if (empty($PermissionRole)) {
-            abort(404);
+            return back();
         }
 
+        // Ambil data
         $data['role'] = Role::getRecord($id);
         $data['permission'] = Permission::getRecords();
         $data['permissionRole'] = PermissionRole::getRolePermission($id);
@@ -109,11 +120,13 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // Ambil izin berdasarkan role pengguna
         $PermissionRole = PermissionRole::getPermission('Edit Role', Auth::user()->role_id);
         if (empty($PermissionRole)) {
             abort(404);
         }
 
+        // Validasi
         $request->validate([
             'name' => 'required',
         ],
@@ -121,10 +134,12 @@ class RoleController extends Controller
             'name.required' => 'Role name is required',
         ]);
 
+        // Update role
         Role::getRecord($id)->update([
             'name' => $request->name,
         ]);
 
+        // Insert Permission
         PermissionRole::InsertUpdateRecord($request->permission_id, $id);
 
         return redirect('role')->with('success', 'Role updated successfully');
@@ -135,11 +150,13 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
+        // Ambil izin berdasarkan role pengguna
         $PermissionRole = PermissionRole::getPermission('Delete Role', Auth::user()->role_id);
         if (empty($PermissionRole)) {
             abort(404);
         }
 
+        // Hapus role
         Role::getRecord($id)->delete();
 
         return redirect('role')->with('success', 'Role deleted successfully');

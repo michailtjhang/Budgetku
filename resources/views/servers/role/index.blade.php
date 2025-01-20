@@ -1,6 +1,5 @@
 @extends('servers.layouts.app')
-@section('css')
-@endsection
+
 @section('content')
     <div class="card">
         <nav aria-label="breadcrumb">
@@ -93,6 +92,7 @@
         </div>
     </div>
 @endsection
+
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection

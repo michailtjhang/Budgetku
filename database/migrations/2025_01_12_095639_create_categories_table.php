@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->uuid('role_id')->nullable()->after('id')->default('01j8kkdk3abh0a671dr5rqkshy'); 
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->enum('type', ['income', 'expense']); // tipe kategori
+            $table->string('icon'); // class ikon dari FontAwesome
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role_id'); 
-        });
+        Schema::dropIfExists('categories');
     }
 };

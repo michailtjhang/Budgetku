@@ -19,6 +19,10 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->string('provider_id')->nullable(); // Menambahkan provider ID
+            $table->string('provider_name')->nullable(); // Menambahkan provider name
+            $table->string('access_token', 500)->nullable(); // Menambahkan access token dengan panjang maksimal 500 karakter
+            $table->string('refresh_token', 500)->nullable(); // Menambahkan refresh token dengan panjang maksimal 500 karakter
             $table->timestamps();
         });
 

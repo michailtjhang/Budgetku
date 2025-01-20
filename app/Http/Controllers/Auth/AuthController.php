@@ -50,7 +50,8 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
+            'password' => 'required|confirmed|min:8',
+            'password_confirmation' => 'required',
         ], [
             'name.required' => 'Name is required',
             'email.required' => 'Email is required',
@@ -58,6 +59,8 @@ class AuthController extends Controller
             'email.unique' => 'Email already exists',
             'password.required' => 'Password is required',
             'password.min' => 'Password must be at least 8 characters',
+            'password.confirmed' => 'Password confirmation does not match',
+            'password_confirmation.required' => 'Password confirmation is required',
         ]);
 
         $user = User::latest()->first();
