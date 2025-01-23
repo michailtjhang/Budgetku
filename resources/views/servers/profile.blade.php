@@ -20,7 +20,7 @@
                         </div>
 
                         <h3 class="profile-username text-center">{{ auth()->user()->name }}</h3>
-                        {{-- <p class="text-muted text-center">{{ auth()->user()->role->name }}</p> --}}
+                        <p class="text-muted text-center">{{ auth()->user()->role->name }}</p>
                     </div>
                 </div>
 

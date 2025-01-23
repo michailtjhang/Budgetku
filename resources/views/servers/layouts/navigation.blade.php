@@ -20,33 +20,43 @@
         </div>
         <nav class="mt-2">
             @php
+                $PermissionDashboard = App\Models\PermissionRole::getPermission('Dashboard', Auth::user()->role_id);
                 $PermissionUser = App\Models\PermissionRole::getPermission('User', Auth::user()->role_id);
                 $PermissionRole = App\Models\PermissionRole::getPermission('Role', Auth::user()->role_id);
+                $PermissionCategory = App\Models\PermissionRole::getPermission('Category', Auth::user()->role_id);
             @endphp
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
 
-                <li class="nav-header">General</li>
-                <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link @if (Request::segment(2) == 'dashboard') active @endif">
-                        <i class="nav-icon fas fa-home"></i>
-                        <p>
-                            Dashboard
-                        </p>
-                    </a>
-                </li>
+                @if (!empty($PermissionDashboard))
+                    <li class="nav-header">General</li>
+                @endif
 
-                @if (!empty($PermissionUser) || !empty($PermissionRole))
+                @if (!empty($PermissionDashboard))
+                    <li class="nav-item">
+                        <a href="{{ route('dashboard') }}"
+                            class="nav-link @if (Request::segment(2) == 'dashboard') active @endif">
+                            <i class="nav-icon fas fa-home"></i>
+                            <p>
+                                Dashboard
+                            </p>
+                        </a>
+                    </li>
+                @endif
+
+                @if (!empty($PermissionUser) || !empty($PermissionRole) || !empty($PermissionCategory))
                     <li class="nav-header">Management</li>
                 @endif
 
-                <li class="nav-item">
-                    <a href="{{ route('category.index') }}"
-                        class="nav-link @if (Request::segment(1) == 'category') active @endif">
-                        <i class="fas fa-list nav-icon"></i>
-                        <p>Category</p>
-                    </a>
-                </li>
+                @if (!empty($PermissionCategory))
+                    <li class="nav-item">
+                        <a href="{{ route('category.index') }}"
+                            class="nav-link @if (Request::segment(1) == 'category') active @endif">
+                            <i class="fas fa-list nav-icon"></i>
+                            <p>Category</p>
+                        </a>
+                    </li>
+                @endif
 
                 @if (!empty($PermissionUser))
                     <li class="nav-item">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\LogVisitor;
 use Illuminate\Foundation\Application;
 use App\Http\Middleware\AdminUserMiddleware;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'useradmin' => AdminUserMiddleware::class,
+            'logvisitor' => LogVisitor::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

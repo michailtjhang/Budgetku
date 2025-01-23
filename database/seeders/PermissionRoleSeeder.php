@@ -15,6 +15,13 @@ class PermissionRoleSeeder extends Seeder
     {
         DB::table('permission_role')->insert([
             [
+                'id' => '9d185d88-b7e9-4f4b-9b1b-5a5f6b1b1f1b',
+                'permission_id' => 1,
+                'role_id' => '01j8kkd0j357ddxkdq75etr7q2',
+                'created_at' => '2024-09-25 08:55:40',
+                'updated_at' => '2024-09-25 08:55:40'
+            ],
+            [
                 'id' => '9d185d88-a9a8-477e-bd83-b6eb9b38410f',
                 'permission_id' => 2,
                 'role_id' => '01j8kkd0j357ddxkdq75etr7q2',

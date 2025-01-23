@@ -16,9 +16,12 @@ Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/auth/redirect', [SocialiteController::class, 'redirect'])->name('auth.socialite.redirect');
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('auth.socialite.callback');
 
-Route::group(['middleware' => ['auth', 'useradmin']], function () {
+Route::group(['middleware' => ['useradmin']], function () {
 
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')
+                ->middleware('logvisitor');
+
+        Route::get('/api/visitor-stats', [DashboardController::class, 'getVisitorStats']);
 
         Route::resource('category', App\Http\Controllers\servers\CategoryController::class);
         Route::resource('role', App\Http\Controllers\servers\RoleController::class);
