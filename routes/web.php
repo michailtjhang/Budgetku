@@ -23,4 +23,6 @@ Route::group(['middleware' => ['auth', 'useradmin']], function () {
         Route::resource('category', App\Http\Controllers\servers\CategoryController::class);
         Route::resource('role', App\Http\Controllers\servers\RoleController::class);
         Route::resource('user', App\Http\Controllers\servers\UserController::class);
+        Route::resource('profile', App\Http\Controllers\servers\ProfileController::class)
+                ->only(['index', 'update', 'destroy']);
 });
