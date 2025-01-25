@@ -5,6 +5,11 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\servers\DashboardController;
 
+Route::get('/', function () {
+        return redirect()->route('login');
+});
+
+// Auth
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'auth_login']);
 
@@ -13,6 +18,7 @@ Route::post('register', [AuthController::class, 'auth_register']);
 
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
+// Socialite Auth
 Route::get('/auth/redirect', [SocialiteController::class, 'redirect'])->name('auth.socialite.redirect');
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('auth.socialite.callback');
 
@@ -28,4 +34,6 @@ Route::group(['middleware' => ['useradmin']], function () {
         Route::resource('user', App\Http\Controllers\servers\UserController::class);
         Route::resource('profile', App\Http\Controllers\servers\ProfileController::class)
                 ->only(['index', 'update', 'destroy']);
+        Route::resource('transaction', App\Http\Controllers\servers\TransactionController::class)
+                ->only(['index', 'store', 'show', 'update', 'destroy']);
 });

@@ -116,7 +116,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered">
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th style="width: 10px">#</th>
@@ -159,7 +159,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered">
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th style="width: 10px">#</th>

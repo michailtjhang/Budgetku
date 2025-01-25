@@ -17,7 +17,11 @@
 
     <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/fontawesome-free/css/all.min.css">
 
+    
+    @yield('css')
+    
     <link rel="stylesheet" href="https://adminlte.io/themes/v3/dist/css/adminlte.min.css?v=3.2.0">
+
     <script nonce="b4280936-d779-40bf-b82a-d0f55cb84e4e">
         (function(w, d) {
             ! function(eK, eL, eM, eN) {
@@ -76,14 +80,12 @@
                     }));
                     eS.referrerPolicy = "origin";
                     eS.src = "/cdn-cgi/zaraz/s.js?z=" + btoa(encodeURIComponent(JSON.stringify(eK.zarazData)));
-                    eR.parentNode.insertBefore(eS, eR)
                 };
                 ["complete", "interactive"].includes(eL.readyState) ? zaraz.init() : eK.addEventListener(
                     "DOMContentLoaded", zaraz.init)
             }(w, d, 0, "script");
         })(window, document);
     </script>
-    @yield('css')
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">

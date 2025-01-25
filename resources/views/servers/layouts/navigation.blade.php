@@ -44,6 +44,14 @@
                     </li>
                 @endif
 
+                <li class="nav-item">
+                    <a href="{{ route('transaction.index') }}"
+                        class="nav-link @if (Request::segment(1) == 'transactions') active @endif">
+                        <i class="fas fa-money-bill nav-icon"></i>
+                        <p>Transactions</p>
+                    </a>
+                </li>
+
                 @if (!empty($PermissionUser) || !empty($PermissionRole) || !empty($PermissionCategory))
                     <li class="nav-header">Management</li>
                 @endif
