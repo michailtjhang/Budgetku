@@ -5,6 +5,7 @@ namespace App\Http\Controllers\servers;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Visitors;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\PermissionRole;
 use App\Http\Controllers\Controller;
@@ -35,10 +36,36 @@ class DashboardController extends Controller
             ? (($currentMonthVisitors - $lastMonthVisitors) / $lastMonthVisitors) * 100
             : 0;
 
+            $user = auth()->user();
+
+            // Hitung pemasukan bulan ini
+            $totalIncomeThisMonth = Transaction::where('user_id', $user->id)
+                ->where('type', 'income')
+                ->whereMonth('date', Carbon::now()->month)
+                ->sum('amount');
+    
+            // Hitung pengeluaran bulan ini
+            $totalExpenseThisMonth = Transaction::where('user_id', $user->id)
+                ->where('type', 'expense')
+                ->whereMonth('date', Carbon::now()->month)
+                ->sum('amount');
+    
+            // Hitung saldo (total pemasukan - total pengeluaran)
+            $currentBalance = $totalIncomeThisMonth - $totalExpenseThisMonth;
+    
+            // Hitung persentase pengeluaran terhadap pemasukan
+            $percentageSpent = $totalIncomeThisMonth > 0
+                ? round(($totalExpenseThisMonth / $totalIncomeThisMonth) * 100, 2)
+                : 0;
+
         return view('servers.dashboard', [
             'total_user' => User::where('role_id', '=', '01j8kkdk3abh0a671dr5rqkshy')->count(),
             'currentMonthVisitors' => $currentMonthVisitors,
             'percentageChange' => $percentageChange,
+            'totalIncomeThisMonth' => $totalIncomeThisMonth,
+            'totalExpenseThisMonth' => $totalExpenseThisMonth,
+            'currentBalance' => $currentBalance,
+            'percentageSpent' => $percentageSpent
         ]);
     }
 

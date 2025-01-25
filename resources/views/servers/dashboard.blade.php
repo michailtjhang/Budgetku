@@ -16,37 +16,65 @@
     <div class="container-fluid">
 
         <div class="row">
+            <!-- Total Income -->
+            <div class="col-lg-3 col-12">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>Rp {{ number_format($totalIncomeThisMonth, 0, ',', '.') }}</h3>
+                        <p>Total Income This Month</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-arrow-up-a"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">View <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Total Expense -->
+            <div class="col-lg-3 col-12">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>Rp {{ number_format($totalExpenseThisMonth, 0, ',', '.') }}</h3>
+                        <p>Total Expense This Month</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-arrow-down-a"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">View <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Current Balance -->
+            <div class="col-lg-3 col-12">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>Rp {{ number_format($currentBalance, 0, ',', '.') }}</h3>
+                        <p>Current Balance</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-cash"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">View <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Percentage Spent -->
+            <div class="col-lg-3 col-12">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ $percentageSpent }}%</h3>
+                        <p>Percentage of Income Spent</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">View <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+
             @if (auth()->user()->role->name == 'Admin')
-                <div class="col-lg-3 col-12">
-
-                    <div class="small-box bg-info">
-                        <div class="inner">
-                            <h3>{{ $total_Partisipan ?? 0 }}</h3>
-                            <p>Total Partisipan Event</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-calendar"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">View <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-12">
-
-                    <div class="small-box bg-success">
-                        <div class="inner">
-                            <h3>100%</h3>
-                            <p>Percentage Donation</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">View <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-12">
-                    <div class="small-box bg-warning">
+                <div class="col-lg-6 col-12">
+                    <div class="small-box bg-primary">
                         <div class="inner">
                             <h3>{{ $total_user ?? 0 }}</h3>
                             <p>User Registrations</p>
@@ -59,35 +87,8 @@
 
                 </div>
 
-                <div class="col-lg-3 col-12">
-                    <div class="small-box bg-danger">
-                        <div class="inner">
-                            <h3>{{ $currentMonthVisitors ?? 0 }}</h3>
-                            <p>Visitors</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">View <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-
-                </div>
-            @else
-                <div class="col-lg-3 col-12">
-                    <div class="small-box bg-danger">
-                        <div class="inner">
-                            <h3>{{ $currentMonthVisitors ?? 0 }}</h3>
-                            <p>Visitors</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">View <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-
-                </div>
-                <div class="col-lg-3 col-12">
-                    <div class="small-box bg-danger">
+                <div class="col-lg-6 col-12">
+                    <div class="small-box bg-secondary">
                         <div class="inner">
                             <h3>{{ $currentMonthVisitors ?? 0 }}</h3>
                             <p>Visitors</p>
@@ -103,98 +104,11 @@
 
         </div>
 
-        <div class="row">
-            <!-- Cards Articles -->
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h4 class="mb-0">Latest Articles</h4>
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fa fa-arrow-right"></i> See All
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10px">#</th>
-                                    <th>Title</th>
-                                    <th>Category</th>
-                                    <th>Created At</th>
-                                    <th style="width: 40px">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{-- @foreach ($last_article as $row)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $row->title }}</td>
-                                        <td>{{ $row->category->name }}</td>
-                                        <td>{{ $row->created_at->format('d M Y') }}</td>
-                                        <td>
-                                            <a href="{{ route('article.show', $row->id) }}"
-                                                class="btn btn-secondary btn-sm">
-                                                <i class="fa fa-eye"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach --}}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cards Events -->
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h4 class="mb-0">Latest Events</h4>
-                            <a href="#" class="btn btn-primary btn-sm">
-                                <i class="fa fa-arrow-right"></i> See All
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10px">#</th>
-                                    <th>Title</th>
-                                    <th>Category</th>
-                                    <th>Created At</th>
-                                    <th style="width: 40px">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{-- @foreach ($last_event as $row)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $row->title }}</td>
-                                        <td>{{ $row->category->name }}</td>
-                                        <td>{{ $row->created_at->format('d F Y') }}</td>
-                                        <td>
-                                            <a href="{{ route('event.show', $row->id) }}" class="btn btn-secondary btn-sm">
-                                                <i class="fa fa-eye"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach --}}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- AREA CHART - Visitors -->
-        <div class="row">
+        @if (auth()->user()->role->name == 'Admin')
+            <!-- AREA CHART - Visitors -->
+            {{-- <div class="row"> --}}
             <!-- Visitors Chart -->
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
@@ -204,13 +118,14 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <p class="d-flex flex-column">
-                                <span id="currentVisitors" class="text-bold text-lg">{{ $currentMonthVisitors }} Action</span>
+                                <span id="currentVisitors" class="text-bold text-lg">{{ $currentMonthVisitors }}
+                                    Action</span>
                                 <span>Action Visitors This Month</span>
                             </p>
                             <p class="ml-auto d-flex flex-column text-right">
                                 @if ($percentageChange > 0)
                                     <span class="text-success">
-                                        <i class="fas fa-arrow-up"></i> {{ $percentageChange  }}%
+                                        <i class="fas fa-arrow-up"></i> {{ $percentageChange }}%
                                     @elseif ($percentageChange == 0)
                                         <span class="text-success">
                                             <i class="fas fa-arrow-up"></i> 100%
@@ -264,7 +179,8 @@
                     </div>
                 </div>
             </div> --}}
-        </div>
+            {{-- </div> --}}
+        @endif
     </div>
     <!-- /.card-body -->
 @endsection
