@@ -15,11 +15,17 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::where('user_id', Auth::id())
-            ->with('category')->get();
+        $expenses = Transaction::where('user_id', Auth::id())
+            ->where('type', 'expense')
+            ->with('category')->paginate(3);
+        $income = Transaction::where('user_id', Auth::id())
+            ->where('type', 'income')
+            ->with('category')->paginate(3);
+
         $categories = Category::all(); // Fetch all categories
         return view('servers.transactions.index', [
-            'transactions' => $transactions,
+            'expenses' => $expenses,
+            'income' => $income,
             'categories' => $categories,
             'page_title' => 'Transactions',
         ]);
@@ -47,7 +53,7 @@ class TransactionController extends Controller
             'type' => $validated['type'],
         ]);
 
-        return response()->json($transaction, 201);
+        return back()->with('success', 'Transaction created successfully.');
     }
 
     /**
@@ -78,7 +84,7 @@ class TransactionController extends Controller
 
         $transaction->update($validated);
 
-        return response()->json($transaction);
+        return back()->with('success', 'Transaction updated successfully.');
     }
 
     /**
@@ -90,6 +96,6 @@ class TransactionController extends Controller
             ->where('id', $id)->firstOrFail();
         $transaction->delete();
 
-        return response()->json(['message' => 'Transaction deleted successfully.']);
+        return back()->with('success', 'Transaction deleted successfully.');
     }
 }

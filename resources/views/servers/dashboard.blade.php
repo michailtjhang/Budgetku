@@ -22,7 +22,7 @@
             <div class="col-lg-3 col-12">
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>Rp {{ number_format($totalIncomeThisMonth, 0, ',', '.') }}</h3>
+                        <h4 class="font-weight-bold">Rp {{ number_format($totalIncomeThisMonth, 0, ',', '.') }}</h4>
                         <p>Total Income This Month</p>
                     </div>
                     <div class="icon">
@@ -36,7 +36,7 @@
             <div class="col-lg-3 col-12">
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>Rp {{ number_format($totalExpenseThisMonth, 0, ',', '.') }}</h3>
+                        <h4 class="font-weight-bold">Rp {{ number_format($totalExpenseThisMonth, 0, ',', '.') }}</h4>
                         <p>Total Expense This Month</p>
                     </div>
                     <div class="icon">
@@ -50,7 +50,7 @@
             <div class="col-lg-3 col-12">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>Rp {{ number_format($currentBalance, 0, ',', '.') }}</h3>
+                        <h4 class="font-weight-bold">Rp {{ number_format($currentBalance, 0, ',', '.') }}</h4>
                         <p>Current Balance</p>
                     </div>
                     <div class="icon">
@@ -64,7 +64,7 @@
             <div class="col-lg-3 col-12">
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>{{ $percentageSpent }}%</h3>
+                        <h4 class="font-weight-bold">{{ $percentageSpent }}%</h4>
                         <p>Percentage of Income Spent</p>
                     </div>
                     <div class="icon">
@@ -78,7 +78,7 @@
                 <div class="col-lg-6 col-12">
                     <div class="small-box bg-primary">
                         <div class="inner">
-                            <h3>{{ $total_user ?? 0 }}</h3>
+                            <h4 class="font-weight-bold">{{ $total_user ?? 0 }}</h4>
                             <p>User Registrations</p>
                         </div>
                         <div class="icon">
@@ -92,7 +92,7 @@
                 <div class="col-lg-6 col-12">
                     <div class="small-box bg-secondary">
                         <div class="inner">
-                            <h3>{{ $currentMonthVisitors ?? 0 }}</h3>
+                            <h4 class="font-weight-bold">{{ $currentMonthVisitors ?? 0 }}</h4>
                             <p>Visitors</p>
                         </div>
                         <div class="icon">
@@ -111,7 +111,7 @@
             <div class="col-lg-6 col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Expenses</h3>
+                        <h4 class="card-title">Expenses</h4>
                     </div>
                     <div class="card-body">
                         <div id="expenses-donut-chart" style="height: 300px;"></div>
@@ -123,7 +123,7 @@
             <div class="col-lg-6 col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Income</h3>
+                        <h4 class="card-title">Income</h4>
                     </div>
                     <div class="card-body">
                         <div id="income-donut-chart" style="height: 300px;"></div>
@@ -177,8 +177,10 @@
 @section('js')
     <!-- jQuery -->
     <script src="https://adminlte.io/themes/v3/plugins/jquery/jquery.min.js"></script>
-    <!-- ChartJS -->
-    <script src="https://adminlte.io/themes/v3/plugins/chart.js/Chart.min.js"></script>
+    @if (auth()->user()->role->name == 'Admin')
+        <!-- ChartJS -->
+        <script src="https://adminlte.io/themes/v3/plugins/chart.js/Chart.min.js"></script>
+    @endif
     <!-- FLOT CHARTS -->
     <script src="https://adminlte.io/themes/v3/plugins/flot/jquery.flot.js"></script>
     <!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
@@ -188,125 +190,146 @@
 
     <script>
         $(function() {
-            // Chart for Visitors
-            const visitorsCtx = $('#visitors-chart').get(0).getContext('2d');
+            @if (auth()->user()->role->name == 'Admin')
+                // Chart for Visitors
+                const visitorsCtx = $('#visitors-chart').get(0).getContext('2d');
 
-            // Fetch data for Visitors
-            $.ajax({
-                url: 'api/visitor-stats',
-                method: 'GET',
-                success: function(response) {
-                    const currentMonth = response.currentMonth;
-                    const lastMonth = response.lastMonth;
+                // Fetch data for Visitors
+                $.ajax({
+                    url: 'api/visitor-stats',
+                    method: 'GET',
+                    success: function(response) {
+                        const currentMonth = response.currentMonth;
+                        const lastMonth = response.lastMonth;
 
-                    // Extract labels and datasets
-                    const currentLabels = currentMonth.map(item => item.date);
-                    const currentData = currentMonth.map(item => item.count);
+                        // Extract labels and datasets
+                        const currentLabels = currentMonth.map(item => item.date);
+                        const currentData = currentMonth.map(item => item.count);
 
-                    const lastLabels = lastMonth.map(item => item.date);
-                    const lastData = lastMonth.map(item => item.count);
+                        const lastLabels = lastMonth.map(item => item.date);
+                        const lastData = lastMonth.map(item => item.count);
 
-                    // Combine labels for consistent X-Axis
-                    const labels = [...new Set([...lastLabels, ...currentLabels])];
+                        // Combine labels for consistent X-Axis
+                        const labels = [...new Set([...lastLabels, ...currentLabels])];
 
-                    const lastMonthData = labels.map(label => {
-                        const entry = lastMonth.find(item => item.date === label);
-                        return entry ? entry.count : 0;
-                    });
+                        const lastMonthData = labels.map(label => {
+                            const entry = lastMonth.find(item => item.date === label);
+                            return entry ? entry.count : 0;
+                        });
 
-                    const currentMonthData = labels.map(label => {
-                        const entry = currentMonth.find(item => item.date === label);
-                        return entry ? entry.count : 0;
-                    });
+                        const currentMonthData = labels.map(label => {
+                            const entry = currentMonth.find(item => item.date === label);
+                            return entry ? entry.count : 0;
+                        });
 
-                    // Create the chart for Visitors
-                    new Chart(visitorsCtx, {
-                        type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                    label: 'This Month',
-                                    data: currentMonthData,
-                                    borderColor: 'rgba(60,141,188,0.8)',
-                                    backgroundColor: 'rgba(60,141,188,0.4)',
-                                    fill: true,
-                                },
-                                {
-                                    label: 'Last Month',
-                                    data: lastMonthData,
-                                    borderColor: 'rgba(210, 214, 222, 1)',
-                                    backgroundColor: 'rgba(210, 214, 222, 0.4)',
-                                    fill: true,
-                                }
-                            ]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    display: true
-                                }
+                        // Create the chart for Visitors
+                        new Chart(visitorsCtx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                        label: 'This Month',
+                                        data: currentMonthData,
+                                        borderColor: 'rgba(60,141,188,0.8)',
+                                        backgroundColor: 'rgba(60,141,188,0.4)',
+                                        fill: true,
+                                    },
+                                    {
+                                        label: 'Last Month',
+                                        data: lastMonthData,
+                                        borderColor: 'rgba(210, 214, 222, 1)',
+                                        backgroundColor: 'rgba(210, 214, 222, 0.4)',
+                                        fill: true,
+                                    }
+                                ]
                             },
-                            scales: {
-                                x: {
-                                    grid: {
-                                        display: false
+                            options: {
+                                maintainAspectRatio: false,
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        display: true
                                     }
                                 },
+                                scales: {
+                                    x: {
+                                        grid: {
+                                            display: false
+                                        }
+                                    },
+                                }
                             }
-                        }
-                    });
-                }
-            });
+                        });
+                    }
+                });
+            @endif
 
             // Fetch data for Donut Charts
             $.ajax({
                 url: 'api/category-stats',
                 method: 'GET',
                 success: function(response) {
-                    // Render Donut Chart for Expenses
-                    $.plot('#expenses-donut-chart', response.expenses, {
-                        series: {
-                            pie: {
-                                show: true,
-                                radius: 1,
-                                innerRadius: 0.5,
-                                label: {
+                    // Handle Expenses Chart
+                    if (response.expenses && response.expenses.length > 0) {
+                        // Render Donut Chart for Expenses
+                        $.plot('#expenses-donut-chart', response.expenses, {
+                            series: {
+                                pie: {
                                     show: true,
-                                    radius: 2 / 3,
-                                    formatter: labelFormatter,
-                                    threshold: 0.1
+                                    radius: 1,
+                                    innerRadius: 0.5,
+                                    label: {
+                                        show: true,
+                                        radius: 2 / 3,
+                                        formatter: labelFormatter,
+                                        threshold: 0.1
+                                    }
                                 }
+                            },
+                            legend: {
+                                show: false
                             }
-                        },
-                        legend: {
-                            show: false
-                        }
-                    });
+                        });
+                    } else {
+                        // If no data, show message
+                        $('#expenses-donut-chart').html(
+                            '<p class="text-center">No expense data available.</p>');
+                    }
 
-                    // Render Donut Chart for Income
-                    $.plot('#income-donut-chart', response.income, {
-                        series: {
-                            pie: {
-                                show: true,
-                                radius: 1,
-                                innerRadius: 0.5,
-                                label: {
+                    // Handle Income Chart
+                    if (response.income && response.income.length > 0) {
+                        // Render Donut Chart for Income
+                        $.plot('#income-donut-chart', response.income, {
+                            series: {
+                                pie: {
                                     show: true,
-                                    radius: 2 / 3,
-                                    formatter: labelFormatter,
-                                    threshold: 0.1
+                                    radius: 1,
+                                    innerRadius: 0.5,
+                                    label: {
+                                        show: true,
+                                        radius: 2 / 3,
+                                        formatter: labelFormatter,
+                                        threshold: 0.1
+                                    }
                                 }
+                            },
+                            legend: {
+                                show: false
                             }
-                        },
-                        legend: {
-                            show: false
-                        }
-                    });
+                        });
+                    } else {
+                        // If no data, show message
+                        $('#income-donut-chart').html(
+                            '<p class="text-center">No income data available.</p>');
+                    }
                 },
                 error: function() {
                     console.error('Failed to fetch data for charts');
+                    // Handle error by showing a message
+                    $('#expenses-donut-chart').html(
+                        '<p class="text-center text-danger">Failed to load expense chart data.</p>');
+                    $('#income-donut-chart').html(
+                        '<p class="text-center text-danger">Failed to load income chart data.</p>');
                 }
             });
 
