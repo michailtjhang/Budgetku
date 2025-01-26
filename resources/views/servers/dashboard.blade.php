@@ -3,6 +3,8 @@
 @section('css')
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Flot CSS -->
+    <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/flot/jquery.flot.pie.css">
 @endsection
 
 @section('preloader')
@@ -104,9 +106,33 @@
 
         </div>
 
+        <div class="row">
+            <!-- Expenses Donut Chart -->
+            <div class="col-lg-6 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Expenses</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="expenses-donut-chart" style="height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Income Donut Chart -->
+            <div class="col-lg-6 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Income</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="income-donut-chart" style="height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         @if (auth()->user()->role->name == 'Admin')
-            <!-- AREA CHART - Visitors -->
-            {{-- <div class="row"> --}}
             <!-- Visitors Chart -->
             <div class="col-lg-12">
                 <div class="card">
@@ -143,43 +169,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Donations Chart -->
-            {{-- <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between">
-                            <h4>Donations</h4>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <p class="d-flex flex-column">
-                                <span id="currentDonations" class="text-bold text-lg">Rp. {{ number_format($currentMonthDonations, 0, ',', '.') }}</span>
-                                <span>Donations This Month</span>
-                            </p>
-                            <p class="ml-auto d-flex flex-column text-right">
-                                @if ($donationPercentageChange > 0)
-                                    <span class="text-success">
-                                        <i class="fas fa-arrow-up"></i> {{ $donationPercentageChange }}%
-                                    @elseif ($donationPercentageChange == 0)
-                                        <span class="text-success">
-                                            <i class="fas fa-arrow-up"></i> 100%
-                                        @else
-                                            <span class="text-danger">
-                                                <i class="fas fa-arrow-down"></i> {{ $donationPercentageChange }}%
-                                @endif
-                                </span>
-                                <span class="text-muted">Since last month</span>
-                            </p>
-                        </div>
-                        <div class="position-relative mb-4">
-                            <canvas id="donation-chart" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
-            {{-- </div> --}}
         @endif
     </div>
     <!-- /.card-body -->
@@ -190,6 +179,12 @@
     <script src="https://adminlte.io/themes/v3/plugins/jquery/jquery.min.js"></script>
     <!-- ChartJS -->
     <script src="https://adminlte.io/themes/v3/plugins/chart.js/Chart.min.js"></script>
+    <!-- FLOT CHARTS -->
+    <script src="https://adminlte.io/themes/v3/plugins/flot/jquery.flot.js"></script>
+    <!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
+    <script src="https://adminlte.io/themes/v3/plugins/flot/plugins/jquery.flot.resize.js"></script>
+    <!-- FLOT PIE PLUGIN - also used to draw donut charts -->
+    <script src="https://adminlte.io/themes/v3/plugins/flot/plugins/jquery.flot.pie.js"></script>
 
     <script>
         $(function() {
@@ -265,77 +260,60 @@
                 }
             });
 
-            // Chart for Donations
-            // const donationsCtx = $('#donation-chart').get(0).getContext('2d');
+            // Fetch data for Donut Charts
+            $.ajax({
+                url: 'api/category-stats',
+                method: 'GET',
+                success: function(response) {
+                    // Render Donut Chart for Expenses
+                    $.plot('#expenses-donut-chart', response.expenses, {
+                        series: {
+                            pie: {
+                                show: true,
+                                radius: 1,
+                                innerRadius: 0.5,
+                                label: {
+                                    show: true,
+                                    radius: 2 / 3,
+                                    formatter: labelFormatter,
+                                    threshold: 0.1
+                                }
+                            }
+                        },
+                        legend: {
+                            show: false
+                        }
+                    });
 
-            // Fetch data for Donations
-            // $.ajax({
-            //     url: 'api/donation-stats',
-            //     method: 'GET',
-            //     success: function(response) {
-            //         const currentMonth = response.currentMonth;
+                    // Render Donut Chart for Income
+                    $.plot('#income-donut-chart', response.income, {
+                        series: {
+                            pie: {
+                                show: true,
+                                radius: 1,
+                                innerRadius: 0.5,
+                                label: {
+                                    show: true,
+                                    radius: 2 / 3,
+                                    formatter: labelFormatter,
+                                    threshold: 0.1
+                                }
+                            }
+                        },
+                        legend: {
+                            show: false
+                        }
+                    });
+                },
+                error: function() {
+                    console.error('Failed to fetch data for charts');
+                }
+            });
 
-            //         // Extract labels and datasets
-            //         const currentLabels = currentMonth.map(item => item.date);
-            //         const currentData = currentMonth.map(item => item.amount);
-
-            //         // Combine labels for consistent X-Axis
-            //         const labels = [...new Set([...currentLabels])];
-
-            //         const currentMonthData = labels.map(label => {
-            //             const entry = currentMonth.find(item => item.date === label);
-            //             return entry ? entry.amount : 0;
-            //         });
-
-            //         // Prepare the chart data
-            //         var barChartCanvas = $('#donation-chart').get(0).getContext('2d');
-            //         var barChartData = {
-            //             labels: labels,
-            //             datasets: [{
-            //                 label: 'This Month',
-            //                 data: currentMonthData,
-            //                 borderColor: 'rgba(60,188,141,0.8)',
-            //                 backgroundColor: 'rgba(60,188,141,0.4)',
-            //                 fill: true,
-            //             }]
-            //         };
-
-            //         // Define the chart options
-            //         var barChartOptions = {
-            //             responsive: true,
-            //             maintainAspectRatio: false,
-            //             datasetFill: false,
-            //             scales: {
-            //                 xAxes: [{
-            //                     stacked: true,
-            //                 }],
-            //                 yAxes: [{
-            //                     stacked: true
-            //                 }]
-            //             },
-            //             plugins: {
-            //                 legend: {
-            //                     display: true
-            //                 },
-            //                 tooltip: {
-            //                     callbacks: {
-            //                         // Format tooltips to show zero when it's zero
-            //                         label: function(tooltipItem) {
-            //                             return tooltipItem.raw === 0 ? '0' : tooltipItem.raw;
-            //                         }
-            //                     }
-            //                 }
-            //             }
-            //         };
-
-            //         // Create the bar chart
-            //         new Chart(barChartCanvas, {
-            //             type: 'bar',
-            //             data: barChartData,
-            //             options: barChartOptions
-            //         });
-            //     }
-            // });
+            // Formatter for labels
+            function labelFormatter(label, series) {
+                return `<div style="font-size:8pt; text-align:center; padding:2px; color:white;">${label}<br>${Math.round(series.percent)}%</div>`;
+            }
         });
     </script>
 @endsection

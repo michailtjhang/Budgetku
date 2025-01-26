@@ -28,6 +28,7 @@ Route::group(['middleware' => ['useradmin']], function () {
                 ->middleware('logvisitor');
 
         Route::get('/api/visitor-stats', [DashboardController::class, 'getVisitorStats']);
+        Route::get('/api/category-stats', [DashboardController::class, 'getCategoryStats']);
 
         Route::resource('category', App\Http\Controllers\servers\CategoryController::class);
         Route::resource('role', App\Http\Controllers\servers\RoleController::class);

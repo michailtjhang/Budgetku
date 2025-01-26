@@ -36,27 +36,27 @@ class DashboardController extends Controller
             ? (($currentMonthVisitors - $lastMonthVisitors) / $lastMonthVisitors) * 100
             : 0;
 
-            $user = auth()->user();
+        $user = auth()->user();
 
-            // Hitung pemasukan bulan ini
-            $totalIncomeThisMonth = Transaction::where('user_id', $user->id)
-                ->where('type', 'income')
-                ->whereMonth('date', Carbon::now()->month)
-                ->sum('amount');
-    
-            // Hitung pengeluaran bulan ini
-            $totalExpenseThisMonth = Transaction::where('user_id', $user->id)
-                ->where('type', 'expense')
-                ->whereMonth('date', Carbon::now()->month)
-                ->sum('amount');
-    
-            // Hitung saldo (total pemasukan - total pengeluaran)
-            $currentBalance = $totalIncomeThisMonth - $totalExpenseThisMonth;
-    
-            // Hitung persentase pengeluaran terhadap pemasukan
-            $percentageSpent = $totalIncomeThisMonth > 0
-                ? round(($totalExpenseThisMonth / $totalIncomeThisMonth) * 100, 2)
-                : 0;
+        // Hitung pemasukan bulan ini
+        $totalIncomeThisMonth = Transaction::where('user_id', $user->id)
+            ->where('type', 'income')
+            ->whereMonth('date', Carbon::now()->month)
+            ->sum('amount');
+
+        // Hitung pengeluaran bulan ini
+        $totalExpenseThisMonth = Transaction::where('user_id', $user->id)
+            ->where('type', 'expense')
+            ->whereMonth('date', Carbon::now()->month)
+            ->sum('amount');
+
+        // Hitung saldo (total pemasukan - total pengeluaran)
+        $currentBalance = $totalIncomeThisMonth - $totalExpenseThisMonth;
+
+        // Hitung persentase pengeluaran terhadap pemasukan
+        $percentageSpent = $totalIncomeThisMonth > 0
+            ? round(($totalExpenseThisMonth / $totalIncomeThisMonth) * 100, 2)
+            : 0;
 
         return view('servers.dashboard', [
             'total_user' => User::where('role_id', '=', '01j8kkdk3abh0a671dr5rqkshy')->count(),
@@ -90,6 +90,48 @@ class DashboardController extends Controller
         return response()->json([
             'currentMonth' => $currentMonthData,
             'lastMonth' => $lastMonthData,
+        ]);
+    }
+
+    public function getCategoryStats()
+    {
+        $user = auth()->user();
+
+        // Data kategori untuk Expenses
+        $expenseCategories = Transaction::where('user_id', $user->id)
+            ->where('type', 'expense')
+            ->with('category') // Relasi dengan kategori
+            ->get()
+            ->groupBy('category.name') // Kelompokkan berdasarkan nama kategori
+            ->map(function ($transactions, $categoryName) {
+                return [
+                    'label' => $categoryName,
+                    'data' => $transactions->sum('amount'),
+                    'color' => sprintf('#%06X', mt_rand(0, 0xFFFFFF)), // Warna random
+                ];
+            })
+            ->values()
+            ->toArray();
+
+        // Data kategori untuk Income
+        $incomeCategories = Transaction::where('user_id', $user->id)
+            ->where('type', 'income')
+            ->with('category') // Relasi dengan kategori
+            ->get()
+            ->groupBy('category.name') // Kelompokkan berdasarkan nama kategori
+            ->map(function ($transactions, $categoryName) {
+                return [
+                    'label' => $categoryName,
+                    'data' => $transactions->sum('amount'),
+                    'color' => sprintf('#%06X', mt_rand(0, 0xFFFFFF)), // Warna random
+                ];
+            })
+            ->values()
+            ->toArray();
+
+        return response()->json([
+            'expenses' => $expenseCategories,
+            'income' => $incomeCategories,
         ]);
     }
 }
